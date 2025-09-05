@@ -5,8 +5,7 @@ from .client import Client
 class HttpClient(Client):
 
     def __init__(self, timeout: float = 10.0, duration: float = 1.0):
-        self.timeout = timeout
-        self.duration = duration
+        super().__init__(timeout, duration)
 
     def get(self, url: str) -> BeautifulSoup:
         response = requests.get(url, timeout=self.timeout)
