@@ -1,3 +1,4 @@
+from typing import cast
 from urllib.parse import urljoin
 from bs4.element import Tag
 from src.model.insurance_meta_data import InsuranceMetadata
@@ -30,16 +31,14 @@ class CkiParser:
         attrs = []
         rows = tbody.find_all('tr')
         for row in rows:
-            if not isinstance(row, Tag):
-                continue
+            assert isinstance(row, Tag)
             cells = row.find_all('td')
-            if len(cells) < 2:
-                continue
-            value_cell = cells[1]
-            links = value_cell.find_all('a')  #type: ignore
+            assert len(cells) >= 2
+            value_cell = cast(Tag, cells[1])
+            links = value_cell.find_all('a')
 
             if links:
-                pdf_url = links[0].get('href', '')  #type: ignore
+                pdf_url = cast(Tag, links[0]).get('href', '')
                 pdf_url = urljoin(cls.BASE_URL, pdf_url)   #type: ignore
                 attrs.append(pdf_url)
             else:
